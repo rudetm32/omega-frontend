@@ -52,11 +52,11 @@ const Login: React.FC = () => {
   };
 
   return (
+    
     <div className="flex items-center justify-center min-h-screen max-w-full">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-128 bg-white p-6 rounded-lg shadow-xl"
-      >
+        className="w-128 bg-white p-6 rounded-lg shadow-xl">
         {/* Agregar el logo aquí */}
         <div className="flex justify-center mb-4">
           <Image

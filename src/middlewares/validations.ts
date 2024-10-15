@@ -4,16 +4,16 @@ export const validatePassword = (value: string) => {
         return "La contraseña es requerida";
     }
     if (value.length < 8) {
-        return "La contraseña debe tener al menos 8 caracteres";
+        return "Debe tener al menos 8 caracteres";
     }
     if (!/(?=.*[A-Z])/.test(value)) {
         return "La contraseña debe contener al menos una mayúscula";
     }
     if (!/(?=.*[0-9])/.test(value)) {
-        return "La contraseña debe contener al menos un número";
+        return "Debe contener al menos un número";
     }
     if (!/(?=.*[!@#$%^&*])/.test(value)) {
-        return "La contraseña debe contener al menos un carácter especial";
+        return "Debe contener al menos un carácter especial";
     }
     return true; 
 };
@@ -60,15 +60,12 @@ export const validateCompany = (value: string) => {
 };
 
 // Validación de confirmación de contraseña
-export const validateConfirmPassword = (password: string, confirmPassword: string) => {
-    if (!confirmPassword) {
-        return "Por favor, confirma tu contraseña";
-    }
-    if (password !== confirmPassword) {
-        return "Las contraseñas no coinciden";
-    }
-    return true;
-};
+export const validateConfirmPassword = (confirmPassword: string) => {
+    return (value: string) => {
+      return value === confirmPassword || "Las contraseñas no coinciden";
+    };
+  };
+  
 
 export const validateName = (value: string) => {
     if (!value) {

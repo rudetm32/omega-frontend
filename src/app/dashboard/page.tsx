@@ -1,33 +1,27 @@
 "use client";
 
-import React, { useState } from "react";
-import Modal from "../components/Modal";
-import RegisterUser from "../components/RegisterUser";
-import RegisterCompany from "../components/RegisterCompany";
-import { useUserContext } from "../context/UserContext";
-import { useCompanyContext } from "../context/CompanyContext";
+import React from "react";
+import { useUserContext } from "../../context/UserContext";
+import { useCompanyContext } from "../../context/CompanyContext";
+import ParentModal from "../../components/modals/ParentModal";
+
+
 
 const Dashboard: React.FC = () => {
-  const [isCompanyModalOpen, setCompanyModalOpen] = useState(false);
-  const [isUserModalOpen, setUserModalOpen] = useState(false);
-
-  const openCompanyModal = () => setCompanyModalOpen(true);
-  const closeCompanyModal = () => setCompanyModalOpen(false);
-
-  const openUserModal = () => setUserModalOpen(true);
-  const closeUserModal = () => setUserModalOpen(false);
-
   const { users } = useUserContext();
   const { companies } = useCompanyContext();
- 
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       <aside className="w-full md:w-64 bg-gray-800 text-white h-16 md:h-auto md:min-h-screen p-4">
         <nav>
           <ul>
             <li className="mb-4">
-              <a href="#" className="block p-2 rounded hover:bg-gray-700">
-                Compañias
+              <a
+                href="#zona-registros"
+                className="block p-2 rounded hover:bg-gray-700"
+              >
+                Registros
               </a>
             </li>
             <li className="mb-4">
@@ -41,7 +35,7 @@ const Dashboard: React.FC = () => {
               </a>
             </li>
             <li>
-              <a href="#" className="block p-2 rounded hover:bg-gray-700">
+              <a href="/login" className="block p-2 rounded hover:bg-gray-700">
                 Logout
               </a>
             </li>
@@ -53,35 +47,19 @@ const Dashboard: React.FC = () => {
       <main className="flex-1 bg-gray-100 p-6">
         <header className="mb-6">
           <h1 className="text-3xl font-semibold">Mesa de control</h1>
-          <p className="text-gray-600">Gestiona usuarios y unidades registradas</p>
+          <p className="text-gray-600">
+            Gestiona usuarios y unidades registradas
+          </p>
         </header>
 
-        <section className="mb-8">
-          <h2 className="text-xl font-bold mb-4">Central</h2>
+        <section id="zona-registros" className="mb-8">
+          <h2 className="text-xl font-bold mb-4">Altas</h2>
           <div className="bg-white p-4 rounded-lg shadow-md">
-            <button
-              className="bg-green-500 text-white px-4 py-2 rounded mb-4"
-              onClick={openCompanyModal}
-            >
-              Alta Compañía
-            </button>
-            <Modal isOpen={isCompanyModalOpen} onClose={closeCompanyModal}>
-              <RegisterCompany onClose={closeCompanyModal} />
-            </Modal>
-
-            <button
-              className="bg-green-500 text-white px-4 py-2 rounded mb-4"
-              onClick={openUserModal}
-            >
-              Alta Usuario
-            </button>
-            <Modal isOpen={isUserModalOpen} onClose={closeUserModal}>
-              <RegisterUser onClose={closeUserModal} />
-            </Modal>
+            <ParentModal />
           </div>
         </section>
 
-        <section className="mb-8">
+        <section className="mb-8 ">
           <h2 className="text-xl font-bold mb-4">Compañias</h2>
           <div className="bg-white p-4 rounded-lg shadow-md">
             <table className="min-w-full table-auto">
@@ -143,7 +121,9 @@ const Dashboard: React.FC = () => {
           {/* Card de Usuarios */}
           <div className="bg-white p-4 rounded-lg shadow-md">
             <h2 className="text-lg font-bold mb-2">Usuarios Activos</h2>
-            <p className="text-2xl font-semibold aling-item-center">{users.length}</p>
+            <p className="text-2xl font-semibold aling-item-center">
+              {users.length}
+            </p>
           </div>
 
           {/* Card de Vehículos */}

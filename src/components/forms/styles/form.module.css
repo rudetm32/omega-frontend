@@ -1,0 +1,30 @@
+.gridForm {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-4;
+}
+
+.flexLabel {
+  @apply flex flex-col
+}
+
+.containerForm {
+  @apply w-full max-w-6xl bg-white p-6 rounded-lg shadow-lg max-h-[90vh] overflow-auto;
+}
+
+.h1Form {
+  @apply text-3xl font-bold mb-8 text-center;
+}
+
+.h2Form {
+  @apply text-xl font-semibold mt-8 mb-4
+}
+.labelText {
+  @apply block mb-1 font-medium;
+}
+
+.errorText {
+  @apply text-red-800 text-sm;
+}
+
+.btnForm {
+  @apply bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 focus:outline-none;
+}
