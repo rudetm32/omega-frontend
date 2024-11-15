@@ -27,7 +27,7 @@ interface CompanyContextType {
 const CompanyContext = createContext<CompanyContextType | undefined>(undefined);
 
 export const CompanyProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { data: companies, mutate } = useSWR('/company', fetchCompany);
+  const { data: companies, mutate } = useSWR('/companies', fetchCompany);
 
   const handleAddCompany = async (company: Company) => {
     await addCompany(company);

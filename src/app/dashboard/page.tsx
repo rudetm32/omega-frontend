@@ -1,172 +1,105 @@
 "use client";
 
 import React from "react";
-import { useUserContext } from "../../context/UserContext";
-import { useCompanyContext } from "../../context/CompanyContext";
-import ParentModal from "../../components/modals/ParentModal";
 
+import { useUserContext } from "@/context/UserContext";
+import { useCompanyContext } from "@/context/CompanyContext";
+import ParentModal from "@/components/modals/ParentModal";
+import Table from "@/components/table/Table";
+import Card from "@/components/cards/Card";
+import Sidebar from "@/components/sidebar/sidebar";
+import LocationTracker from "@/components/location/LocationTracker";
 
+const userColumns = [
+  "ID",
+  "Nombre",
+  "Apellido",
+  "Usuario",
+  "Correo Electrónico",
+  "Compañia",
+];
+const vehicleColumns = ["ID", "Matrícula", "Modelo", "Estado", "Acciones"];
+const companyColumns = ["ID", "Nombre", "Telefono", "Domicilio"];
 
 const Dashboard: React.FC = () => {
   const { users } = useUserContext();
   const { companies } = useCompanyContext();
 
+  const userData = users.map((user) => ({
+    ID: user.id,
+    Nombre: user.firstName,
+    Apellido: user.lastName,
+    Usuario: user.username,
+    email: user.email,
+    Compañia: user.company.id,
+  }));
+
+  const companyData = companies.map((company) => ({
+    ID: company.id,
+    Nombre: company.name,
+    Telefono: company.telephone,
+    Direccion: company.address.city,
+  }));
+
+  const vehicleData = [
+    {
+      ID: 1,
+      Matrícula: "ABC123",
+      Modelo: "Toyota",
+      Estado: "Disponible",
+      Acciones: "Editar / Eliminar",
+    },
+    // más vehículos...
+  ];
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
-      <aside className="w-full md:w-64 bg-gray-800 text-white h-16 md:h-auto md:min-h-screen p-4">
-        <nav>
-          <ul>
-            <li className="mb-4">
-              <a
-                href="#zona-registros"
-                className="block p-2 rounded hover:bg-gray-700"
-              >
-                Registros
-              </a>
-            </li>
-            <li className="mb-4">
-              <a href="#" className="block p-2 rounded hover:bg-gray-700">
-                Usuarios
-              </a>
-            </li>
-            <li className="mb-4">
-              <a href="#" className="block p-2 rounded hover:bg-gray-700">
-                Vehiculos
-              </a>
-            </li>
-            <li>
-              <a href="/login" className="block p-2 rounded hover:bg-gray-700">
-                Logout
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </aside>
+      <Sidebar />
 
-      {/* Main Content */}
-      <main className="flex-1 bg-gray-100 p-6">
+      <main className="flex-1 bg-gray-100 p-6 ml-0 md:ml-64">
+        {" "}
+        {/* Ajuste para compensar el espacio del sidebar */}
         <header className="mb-6">
           <h1 className="text-3xl font-semibold">Mesa de control</h1>
+          <div>
+            <h1>Mapa en Tiempo Real</h1>
+            <LocationTracker />
+          </div>
           <p className="text-gray-600">
             Gestiona usuarios y unidades registradas
           </p>
         </header>
-
         <section id="zona-registros" className="mb-8">
           <h2 className="text-xl font-bold mb-4">Altas</h2>
           <div className="bg-white p-4 rounded-lg shadow-md">
             <ParentModal />
           </div>
         </section>
-
         <section className="mb-8 ">
           <h2 className="text-xl font-bold mb-4">Compañias</h2>
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <table className="min-w-full table-auto">
-              <thead>
-                <tr className="bg-gray-200 text-gray-700">
-                  <th className="px-4 py-2">ID</th>
-                  <th className="px-4 py-2">Nombre</th>
-                  <th className="px-4 py-2">Telefono</th>
-                  <th className="px-4 py-2">Domicilio</th>
-                </tr>
-              </thead>
-              <tbody>
-                {companies.map((company, index) => (
-                  <tr key={index} className="border-t">
-                    <td className="px-4 py-2">{company.id}</td>
-                    <td className="px-4 py-2">{company.name}</td>
-                    <td className="px-4 py-2">{company.telephone}</td>
-                    <td className="px-4 py-2">{company.address.city}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
+            <Table columns={companyColumns} data={companyData} />
           </div>
         </section>
-        {/* Sección de Usuarios */}
         <section className="mb-8">
           <h2 className="text-xl font-bold mb-4">Usuarios</h2>
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            {/* Mostrar lista de usuarios */}
-            <table className="min-w-full table-auto">
-              <thead>
-                <tr className="bg-gray-200 text-gray-700">
-                  <th className="px-4 py-2">ID</th>
-                  <th className="px-4 py-2">Nombre</th>
-                  <th className="px-4 py-2">Apellido</th>
-                  <th className="px-4 py-2">Usuario</th>
-                  <th className="px-4 py-2">Correo Electrónico</th>
-                  <th className="px-4 py-2">Compañia</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((usuario, index) => (
-                  <tr key={index} className="border-t">
-                    <td className="px-4 py-2">{usuario.id}</td>
-                    <td className="px-4 py-2">{usuario.firstName}</td>
-                    <td className="px-4 py-2">{usuario.lastName}</td>
-                    <td className="px-4 py-2">{usuario.username}</td>
-                    <td className="px-4 py-2">{usuario.email}</td>
-                    <td className="px-4 py-2">{usuario.company.id}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
+            <Table columns={userColumns} data={userData} />
           </div>
         </section>
-
+        <section className="mb-8">
+          <h2 className="text-xl font-bold mb-4">Vehículos</h2>
+          <div className="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
+            <Table columns={vehicleColumns} data={vehicleData} />
+          </div>
+        </section>
+        <br />
+        <br />
         {/* Sección para las métricas */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Card de Usuarios */}
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <h2 className="text-lg font-bold mb-2">Usuarios Activos</h2>
-            <p className="text-2xl font-semibold aling-item-center">
-              {users.length}
-            </p>
-          </div>
-
-          {/* Card de Vehículos */}
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <h2 className="text-lg font-bold mb-2">Vehículos Activos</h2>
-            <p className="text-2xl font-semibold">15</p>
-          </div>
-
-          {/* Card de Alertas */}
-          <div className="bg-white p-4 rounded-lg shadow-md">
-            <h2 className="text-lg font-bold mb-2">Alertas</h2>
-            <p className="text-2xl font-semibold">2 Nuevas Alertas</p>
-          </div>
-        </section>
-
-        {/* Tabla de Vehículos */}
-        <section className="mb-8">
-          <h2 className="text-xl font-bold mb-4">Vehículos Registrados</h2>
-          <div className="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
-            <table className="min-w-full table-auto">
-              <thead>
-                <tr className="bg-gray-200 text-gray-700">
-                  <th className="px-4 py-2">ID</th>
-                  <th className="px-4 py-2">Matrícula</th>
-                  <th className="px-4 py-2">Modelo</th>
-                  <th className="px-4 py-2">Estado</th>
-                  <th className="px-4 py-2">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-t">
-                  <td className="px-4 py-2">1</td>
-                  <td className="px-4 py-2">ABC123</td>
-                  <td className="px-4 py-2">Toyota</td>
-                  <td className="px-4 py-2">Disponible</td>
-                  <td className="px-4 py-2">
-                    <button className="text-blue-500">Editar</button>
-                    <button className="text-red-500 ml-2">Eliminar</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <Card title="Usuarios Activos" value={users.length} />
+          <Card title="Vehículos Activos" value={15} />
+          <Card title="Alertas" value="2 nuevas alertas" />
         </section>
       </main>
     </div>

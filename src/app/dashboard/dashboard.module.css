@@ -1,0 +1,7 @@
+.asideDash {
+    @apply block p-2 rounded text-white transition-all duration-300 ease-in-out; /* Transición suave */
+}
+
+.asideDash:hover {
+    @apply bg-gray-700 scale-105; /* Cambio de fondo y escalado suave */
+}
