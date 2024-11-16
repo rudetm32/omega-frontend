@@ -10,16 +10,10 @@ import Card from "@/components/cards/Card";
 import Sidebar from "@/components/sidebar/sidebar";
 import LocationTracker from "@/components/location/LocationTracker";
 
-const userColumns = [
-  "ID",
-  "Nombre",
-  "Apellido",
-  "Usuario",
-  "Correo Electrónico",
-  "Compañia",
-];
+const userColumns = ["ID", "Nombre", "Apellido", "Usuario", "Correo Electrónico", "Compañia"];
 const vehicleColumns = ["ID", "Matrícula", "Modelo", "Estado", "Acciones"];
 const companyColumns = ["ID", "Nombre", "Telefono", "Domicilio"];
+
 
 const Dashboard: React.FC = () => {
   const { users } = useUserContext();
@@ -61,10 +55,10 @@ const Dashboard: React.FC = () => {
         {/* Ajuste para compensar el espacio del sidebar */}
         <header className="mb-6">
           <h1 className="text-3xl font-semibold">Mesa de control</h1>
-          <div>
+          {/* <div>
             <h1>Mapa en Tiempo Real</h1>
             <LocationTracker />
-          </div>
+          </div> */}
           <p className="text-gray-600">
             Gestiona usuarios y unidades registradas
           </p>

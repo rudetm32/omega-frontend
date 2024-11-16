@@ -1,9 +1,15 @@
 "use client";
 
-import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
-import useSWR from 'swr';
-import { fetchUsers, addUser } from '../services/UserServices';
-import { useRouter } from 'next/navigation';
+import React, {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useEffect,
+} from "react";
+import useSWR from "swr";
+import { fetchUsers } from "../services/UserServices";
+import { useRouter } from "next/navigation";
 
 interface User {
   id?: number;
@@ -19,25 +25,29 @@ interface User {
 
 interface UserContextType {
   users: User[];
-  addUser: (user: User) => Promise<void>;
+  //  addUser: (user: User) => Promise<void>;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
   token: string | null;
 }
-
-const UserContext = createContext<UserContextType | undefined>(undefined);
 const BASE_URL = "http://localhost:8080";
+const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { data: users, error, mutate } = useSWR('/users', fetchUsers);
+export const UserProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [token, setToken] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const router = typeof window !== 'undefined' ? useRouter() : null;
+  const router = typeof window !== "undefined" ? useRouter() : null;
+  const { data: users = [], mutate } = useSWR(
+    isAuthenticated ? "/users" : null,
+    fetchUsers
+  );
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedToken = localStorage.getItem('authToken');
+    if (typeof window !== "undefined") {
+      const savedToken = localStorage.getItem("authToken");
       if (savedToken) {
         setToken(savedToken);
         setIsAuthenticated(true);
@@ -45,33 +55,32 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, []);
 
-  const handleAddUser = async (user: User) => {
-    await addUser(user);
-    mutate((currentUsers: User[]) => [...(currentUsers || []), user], false);
-  };
+  // const handleAddUser = async (user: User) => {
+  //   await addUser(user);
+  //   mutate((currentUsers: User[]) => [...(currentUsers || []), user], false);
+  // };
 
   const login = async (username: string, password: string) => {
     try {
       const response = await fetch(`${BASE_URL}/login`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify({ username, password }),
       });
 
-      if (!response.ok) throw new Error('Error en la autenticación');
+      if (!response.ok) throw new Error("Error en la autenticación");
 
       const data = await response.json();
       const jwtToken = data.jwtToken;
 
       setToken(jwtToken);
-      localStorage.setItem('authToken', jwtToken);
+      localStorage.setItem("authToken", jwtToken);
       setIsAuthenticated(true);
-      router?.push('/dashboard');
+      router?.push("/dashboard");
     } catch (error) {
-      console.log('Error de autenticación', error);
       setToken(null);
       throw error;
     }
@@ -80,26 +89,22 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const logout = () => {
     setToken(null);
     setIsAuthenticated(false);
-    localStorage.removeItem('authToken');
-    router?.push('/login');
+    localStorage.removeItem("authToken");
+    router?.push("/login");
   };
 
   return (
     <UserContext.Provider
       value={{
-        users: users || [],
-        addUser: handleAddUser,
+        users: users || [], // Se pasa la lista de usuarios solo si está disponible
+        //        addUser: handleAddUser,
         login,
         logout,
         isAuthenticated,
         token,
       }}
     >
-      {error ? (
-        <div>Error al cargar los usuarios.</div>
-      ) : (
-        children
-      )}
+      {children}
     </UserContext.Provider>
   );
 };
@@ -107,7 +112,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 export const useUserContext = () => {
   const context = useContext(UserContext);
   if (!context) {
-    throw new Error('useUserContext must be used within a UserProvider');
+    throw new Error("useUserContext must be used within a UserProvider");
   }
   return context;
 };

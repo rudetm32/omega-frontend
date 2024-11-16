@@ -7,23 +7,21 @@ import L from "leaflet";
 
 const CustomIcon = L.icon({
   iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
-  iconSize: [15, 25], // Tamaño del icono
-  iconAnchor: [12, 50], // Punto de anclaje del icono
-  popupAnchor: [0, -55], // Ajusta el popup para que aparezca justo arriba del marcador
+  iconSize: [15, 25],
+  iconAnchor: [12, 50],
+  popupAnchor: [0, -55],
 });
 
-// Asignamos el icono a los marcadores
 L.Marker.prototype.options.icon = CustomIcon;
 
 interface MapComponentProps {
-  realPosition: [number, number]; // Ubicación actual
-  simulatedPositions: Array<[number, number]>; // Ubicaciones simuladas
+  realPosition: [number, number];
+  simulatedPositions: Array<[number, number]>;
 }
 
 const Map: React.FC<MapComponentProps> = ({ realPosition, simulatedPositions }) => {
   const [position, setPosition] = useState<[number, number]>(realPosition);
 
-  // Efecto para asegurar que la posición se actualice correctamente
   useEffect(() => {
     if (realPosition) {
       setPosition(realPosition);
@@ -35,15 +33,13 @@ const Map: React.FC<MapComponentProps> = ({ realPosition, simulatedPositions }) 
       <MapContainer
         center={position}
         zoom={13}
-        style={{ height: "400px", width: "100%" }} // Tamaño más pequeño para el mapa
+        style={{ height: "400px", width: "100%" }}
       >
-        {/* Cargamos el tile layer de OpenStreetMap */}
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
 
-        {/* Marcador para la ubicación real */}
         <Marker position={realPosition} icon={CustomIcon}>
           <Popup className="bg-gray-800 text-white p-2 rounded-lg shadow-lg">
             <div className="text-lg font-semibold">Ubicación Real</div>
@@ -56,7 +52,6 @@ const Map: React.FC<MapComponentProps> = ({ realPosition, simulatedPositions }) 
           </Popup>
         </Marker>
 
-        {/* Marcadores para las ubicaciones simuladas */}
         {simulatedPositions.map((position, index) => (
           <Marker key={index} position={position} icon={CustomIcon}>
             <Popup className="bg-gray-800 text-white p-2 rounded-lg shadow-lg">

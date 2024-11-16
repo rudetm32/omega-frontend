@@ -2,7 +2,10 @@ const BASE_URL = "http://localhost:8080";
 
 // Función para obtener el token (ajusta esto según cómo almacenes el token)
 const getToken = () => {
-    return localStorage.getItem("token"); // O de donde sea que obtengas el token
+    if(typeof window !== "undefined") {
+        return localStorage.getItem("authToken");
+    }
+    return null;
 };
 
 export const fetchCompany = async () => {
@@ -14,8 +17,12 @@ export const fetchCompany = async () => {
     });
 
     if (!response.ok) throw new Error("error fetching companies");
-    return await response.json();
+    const data = await response.json();
+
+    console.log("Contiene info de compañias: ", data);
+    return data.content;
 };
+
 
 export const addCompany = async (user: any) => {
     const token = getToken();
