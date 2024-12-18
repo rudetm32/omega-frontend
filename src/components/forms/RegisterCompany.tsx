@@ -10,7 +10,7 @@ interface FormData {
   name: string;
   email: string;
   telephone: string;
-  nameContact: string;
+  contactName: string;
   address: {
     street: string;
     number: string;
@@ -42,14 +42,25 @@ const RegisterCompany: React.FC<RegisterCompanyProps> = ({ onClose }) => {
   });
 
   const onSubmit = async (data: FormData) => {
-    addCompany(data);
-    await Swal.fire({
-      title: "¡Alta Exitosa!",
-      text: `Compañía: ${data.name}`,
-      icon: "success",
-      confirmButtonText: "Aceptar",
-    });
-    onClose();
+    try {
+      console.log("Datos del formulario:", data);
+      await addCompany(data);
+      await Swal.fire({
+        title: "¡Alta Exitosa!",
+        text: `Compañía: ${data.name}`,
+        icon: "success",
+        confirmButtonText: "Aceptar",
+      });
+      onClose();
+    } catch (error) {
+      console.error("Error al añadir la compañía:", error);
+      await Swal.fire({
+        title: "Error",
+        text: "Hubo un problema al registrar la compañía. Por favor, intenta nuevamente.",
+        icon: "error",
+        confirmButtonText: "Aceptar",
+      });
+    }
   };
 
   return (
@@ -81,18 +92,18 @@ const RegisterCompany: React.FC<RegisterCompanyProps> = ({ onClose }) => {
             </label>
             <input
               type="text"
-              id="nameContact"
-              {...register("nameContact", {
+              id="contactName"
+              {...register("contactName", {
                 required: "El nombre del contacto es requerido",
               })}
               placeholder="Nombre del Contacto"
               className={`p-2 border rounded ${
-                errors.nameContact ? "border-red-600" : "border-gray-300"
+                errors.contactName ? "border-red-600" : "border-gray-300"
               } focus:outline-none focus:ring`}
             />
-            {errors.nameContact && (
+            {errors.contactName && (
               <span className="text-red-800 text-sm mt-1">
-                {errors.nameContact.message}
+                {errors.contactName.message}
               </span>
             )}
           </div>
@@ -268,3 +279,4 @@ const RegisterCompany: React.FC<RegisterCompanyProps> = ({ onClose }) => {
 };
 
 export default RegisterCompany;
+

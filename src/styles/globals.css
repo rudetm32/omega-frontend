@@ -2,13 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Definición de variables de fuentes */
 :root {
+  --font-roboto: 'Roboto', sans-serif;
+  --font-open-sans: 'Open Sans', sans-serif;
   --background: #ffffff;
   --foreground: #171717;
-  .bg-custom-navy {
-  background-color: rgba(3, 3, 75, 0.822);
 }
 
+/* Clases personalizadas */
+.bg-custom-navy {
+  background-color: rgba(3, 3, 75, 0.822);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -18,12 +22,17 @@
   }
 }
 
-  /* En globals.css */
+/* Aplicación de fuentes */
 body {
   /* @apply bg-gradient-to-b from-blue-900 via-blue-600 to-blue-400 min-h-screen; */
-  @apply bg-gradient-to-r from-gray-500 via-gray-700 to-black
+  @apply bg-gradient-to-r from-gray-500 via-gray-700 to-black;
+  font-family: var(--font-roboto);
 }
 
+/* Aplicar Open Sans a los encabezados */
+h1, h2, h3 {
+  font-family: var(--font-open-sans);
+}
 
 @layer utilities {
   .text-balance {

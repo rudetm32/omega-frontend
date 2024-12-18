@@ -1,70 +1,57 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import React, { useEffect } from "react";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
 
-const CustomIcon = L.icon({
-  iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
-  iconSize: [15, 25],
-  iconAnchor: [12, 50],
-  popupAnchor: [0, -55],
-});
-
-L.Marker.prototype.options.icon = CustomIcon;
-
-interface MapComponentProps {
+interface MapProps {
   realPosition: [number, number];
-  simulatedPositions: Array<[number, number]>;
+  simulatedPositions: [number, number][];
 }
 
-const Map: React.FC<MapComponentProps> = ({ realPosition, simulatedPositions }) => {
-  const [position, setPosition] = useState<[number, number]>(realPosition);
-
+const Map: React.FC<MapProps> = ({ realPosition, simulatedPositions }) => {
   useEffect(() => {
-    if (realPosition) {
-      setPosition(realPosition);
+    if (typeof window === "undefined") return;
+
+    const L = require("leaflet");
+    const mapContainer = L.DomUtil.get("map");
+
+    if (mapContainer != null) {
+      (mapContainer as any)._leaflet_id = null;
     }
-  }, [realPosition]);
 
-  return (
-    <div className="p-4 bg-white shadow-lg rounded-md w-full max-w-3xl mx-auto">
-      <MapContainer
-        center={position}
-        zoom={13}
-        style={{ height: "400px", width: "100%" }}
-      >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
+    const map = L.map("map").setView(realPosition, 13);
 
-        <Marker position={realPosition} icon={CustomIcon}>
-          <Popup className="bg-gray-800 text-white p-2 rounded-lg shadow-lg">
-            <div className="text-lg font-semibold">Ubicación Real</div>
-            <div className="text-sm">
-              Posición: {realPosition[0].toFixed(2)}, {realPosition[1].toFixed(2)}
-            </div>
-            <a href="#" className="text-blue-500 hover:underline">
-              Más información
-            </a>
-          </Popup>
-        </Marker>
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+    }).addTo(map);
 
-        {simulatedPositions.map((position, index) => (
-          <Marker key={index} position={position} icon={CustomIcon}>
-            <Popup className="bg-gray-800 text-white p-2 rounded-lg shadow-lg">
-              <div className="text-lg font-semibold">Ubicación Simulada {index + 1}</div>
-              <div className="text-sm">
-                Posición: {position[0].toFixed(2)}, {position[1].toFixed(2)}
-              </div>
-            </Popup>
-          </Marker>
-        ))}
-      </MapContainer>
-    </div>
-  );
+    // Añadir marcador para la posición real
+    L.marker(realPosition, { icon: getCustomIcon(L) })
+      .addTo(map)
+      .bindPopup("Ubicación actual")
+      .openPopup();
+
+    // Añadir marcadores para las posiciones simuladas
+    simulatedPositions.forEach((position) => {
+      L.marker(position, { icon: getCustomIcon(L) })
+        .addTo(map)
+        .bindPopup("Ubicación simulada");
+    });
+
+    return () => {
+      map.remove();
+    };
+  }, [realPosition, simulatedPositions]);
+
+  const getCustomIcon = (L: any) =>
+    L.icon({
+      iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
+      iconSize: [15, 25],
+      iconAnchor: [12, 50],
+      popupAnchor: [0, -55],
+    });
+
+  return <div id="map" style={{ height: "400px", width: "100%" }}></div>;
 };
 
 export default Map;

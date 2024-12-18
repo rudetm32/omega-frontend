@@ -1,40 +1,18 @@
-const BASE_URL = "http://localhost:8080";
-
-// Función para obtener el token (ajusta esto según cómo almacenes el token)
-const getToken = () => {
-    if(typeof window !== "undefined") {
-        return localStorage.getItem("authToken");
-    }
-    return null;
-};
+import { BASE_URL, fetchData } from './apiService';
 
 export const fetchCompany = async () => {
-    const token = getToken();
-    const response = await fetch(`${BASE_URL}/companies`, {
-        headers: {
-            "Authorization": `Bearer ${token}`, // Incluye el token en los encabezados
-        },
-    });
-
-    if (!response.ok) throw new Error("error fetching companies");
-    const data = await response.json();
-
-    console.log("Contiene info de compañias: ", data);
-    return data.content;
+  const data = await fetchData(`${BASE_URL}/companies`);
+  console.log("Contiene info de compañías: ", data);
+  return data.content;
 };
 
-
-export const addCompany = async (user: any) => {
-    const token = getToken();
-    const response = await fetch(`${BASE_URL}/companies`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`, // Incluye el token en los encabezados
-        },
-        body: JSON.stringify(user),
-    });
-
-    if (!response.ok) throw new Error("error adding company");
-    return await response.json();
+export const addCompany = async (company: any) => {
+  const data = await fetchData(`${BASE_URL}/companies`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(company),
+  });
+  return data;
 };

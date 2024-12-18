@@ -3,13 +3,14 @@
 import React, { createContext, useContext, ReactNode } from "react";
 import useSWR from "swr";
 import { addCompany, fetchCompany } from "../services/CompanyServices";
+import { useUserContext } from "@/context/UserContext";
 
 interface Company {
-  id: number; // Cambiado a number
+  id: number; 
   name: string;
   email: string;
   telephone: string;
-  nameContact: string;
+  contactName: string;
   address: {
     street: string;
     number: string;
@@ -27,7 +28,8 @@ interface CompanyContextType {
 const CompanyContext = createContext<CompanyContextType | undefined>(undefined);
 
 export const CompanyProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { data: companies, mutate } = useSWR('/companies', fetchCompany);
+  const { isAuthenticated } = useUserContext()
+  const { data: companies, mutate } = useSWR(isAuthenticated ? '/companies' : null, fetchCompany);
 
   const handleAddCompany = async (company: Company) => {
     await addCompany(company);
@@ -44,7 +46,7 @@ export const CompanyProvider: React.FC<{ children: ReactNode }> = ({ children })
 export const useCompanyContext = () => {
   const context = useContext(CompanyContext);
   if (!context) {
-    throw new Error('useCompanyContext must be used within a CompanyProvider'); // Cambiado mensaje
+    throw new Error('useCompanyContext must be used within a CompanyProvider'); 
   }
   return context;
 };

@@ -1,7 +1,24 @@
+/* Asegurar el z-index alto para el menú hamburguesa */
 .asideDash {
-    @apply block p-2 rounded text-white transition-all duration-300 ease-in-out; /* Transición suave */
+    @apply block p-2 rounded text-white transition-all duration-300 ease-in-out z-50;
 }
 
+/* Hover efecto para el menú */
 .asideDash:hover {
-    @apply bg-gray-700 scale-105; /* Cambio de fondo y escalado suave */
+    @apply bg-gray-700 scale-105;
+}
+
+/* Contenedor del menú hamburguesa, siempre visible */
+.asideDashMenu {
+    @apply fixed top-0 left-0 w-full h-full bg-gray-900 text-white z-50;
+}
+
+/* Asegurar que el mapa esté en el fondo */
+.mapContainer {
+    @apply relative z-0; /* Mapa debajo del menú */
+}
+
+/* Otro contenedor que podría estar afectando el z-index */
+.menuContainer {
+    @apply fixed top-0 left-0 w-full h-full bg-gray-900 text-white z-50;
 }
